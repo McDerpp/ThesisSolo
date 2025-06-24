@@ -24,15 +24,17 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    print("[INITSTATE][HOMEPAGE]");
     super.initState();
     initWorkout();
   }
 
   Future<void> initWorkout() async {
+    print("[FETCH][HOMEPAGE] -> initializing workout");
     _workoutsFuture = WorkoutApiService.fetchWorkouts(ref);
     final workout = await _workoutsFuture;
-    print("workout--->$workout");
+    print("[FETCH][HOMEPAGE] -> initialized workout => $workout");
+
     ref.read(workoutsFetchProvider.notifier).setWorkouts(workout);
 
     _exerciseFuture = ExerciseApiService.fetchExercises();

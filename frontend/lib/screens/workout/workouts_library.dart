@@ -7,6 +7,7 @@ import 'package:frontend/provider/provider.dart';
 import 'package:frontend/screens/workout/create_workout_details.dart';
 import 'package:frontend/provider/main_settings.dart';
 import 'package:frontend/screens/workout/workout_data_management.dart';
+import 'package:frontend/services/workout.dart';
 import 'package:frontend/widgets/deleteConfirmation.dart';
 import 'package:frontend/widgets/header.dart';
 import 'package:frontend/widgets/name_indicator.dart';
@@ -159,8 +160,8 @@ class _WorkoutLibraryState extends ConsumerState<WorkoutLibrary>
 
   @override
   void didPopNext() {
-    setState(() {
-      // _workoutsFuture = WorkoutApiService.fetchWorkouts();
+    setState(() async {
+      _workoutsFuture = await WorkoutApiService.fetchWorkouts(ref);
     });
   }
 
@@ -176,7 +177,12 @@ class _WorkoutLibraryState extends ConsumerState<WorkoutLibrary>
   @override
   void initState() {
     super.initState();
-    // _workoutsFuture = WorkoutApiService.fetchWorkouts();
+    _loadWorkouts();
+  }
+
+  Future<void> _loadWorkouts() async {
+    _workoutsFuture = await WorkoutApiService.fetchWorkouts(ref);
+    setState(() {}); // optional, if you want to trigger rebuild
   }
 
   Widget upperSearchBase() {

@@ -1,0 +1,8 @@
+---[Name]---
+
+exerciseName:
+sets:
+reps:
+modelPath
+iamgePath
+videoPath

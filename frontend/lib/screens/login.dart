@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/models/account.dart';
 import 'package:frontend/provider/provider.dart';
 import 'package:frontend/screens/home/home.dart';
 import 'package:frontend/provider/main_settings.dart';
 import 'package:frontend/screens/register.dart';
+import 'package:frontend/screens/workout/workouts_library.dart';
 import 'package:frontend/services/accounts.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
@@ -61,6 +63,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         SnackBar(content: Text('Failed to login')),
       );
     }
+  }
+
+  void test() async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const WorkoutLibrary()),
+    );
   }
 
   void loginAsGuest() {
@@ -183,7 +192,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               width: MediaQuery.of(context).size.width * 0.75,
               child: ElevatedButton(
                 onPressed: () {
-                  loginAsGuest();
+                  test();
                 },
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.black,

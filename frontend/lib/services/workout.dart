@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/account.dart';
 import 'package:frontend/models/exercise.dart';
 import 'package:frontend/models/workout.dart';
+import 'package:frontend/provider/account.dart';
 import 'package:frontend/provider/provider.dart';
 import 'package:http/http.dart' as http;
 
@@ -11,15 +13,26 @@ class WorkoutApiService {
   static const String baseUrl = 'http://192.168.1.16:8000/api/workout/';
 
   static Future<List<Workout>> fetchWorkouts(WidgetRef ref) async {
-    final response = await http.get(Uri.parse(
-        '${baseUrl}getAllWorkout/${ref.read(accountFetchProvider).id}'));
+    print("TESTTESTTESTTESTTESTTESTTEST1");
 
-    if (response.statusCode == 200) {
-      List<dynamic> jsonList = json.decode(response.body);
-      return jsonList.map((json) => Workout.fromJson(json)).toList();
+    if (ref.read(offlineMode) == false) {
+      final response = await http.get(Uri.parse(
+          '${baseUrl}getAllWorkout/${ref.read(accountFetchProvider).id}'));
+
+      if (response.statusCode == 200) {
+        List<dynamic> jsonList = json.decode(response.body);
+        return jsonList.map((json) => Workout.fromJson(json)).toList();
+      } else {
+        throw Exception('Failed to load Workouts');
+      }
     } else {
-      throw Exception('Failed to load Workouts');
+    String data = await rootBundle
+        .loadString('assets/offlineData/workoutData/workoutList.txt');
+      print(data);
+      print("TESTTESTTESTTESTTESTTESTTEST");
     }
+
+    return [];
   }
 
   static Future<List<Exercise>> fetchExerciseWorkouts(int workoutID) async {
@@ -107,33 +120,6 @@ class WorkoutApiService {
       throw Exception('Failed to create Workout');
     }
   }
-
-//   static Future<void> addExerciseToWorkout({
-//     required int exerciseID,
-//     required int workoutID,
-//   }) async {
-//     final uri = Uri.parse('${baseUrl}addWorkoutExercise/');
-
-//     final response = await http.post(
-//       uri,
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//       body: jsonEncode({
-//         'exercise': exerciseID,
-//         'workout': workoutID,
-//       }),
-//     );
-
-//     final responseData = response.body;
-
-//     if (response.statusCode == 201) {
-//       // Handle successful response
-//     } else {
-//       throw Exception('Failed to load exercise');
-//     }
-//   }
-// }
 
   static Future<void> addExerciseToWorkout({
     required int exerciseID,
